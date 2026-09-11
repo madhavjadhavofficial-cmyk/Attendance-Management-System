@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>View Attendance</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .date-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 10px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .view-btn {
+            background: #007bff;
+            color: white;
+        }
+
+        .back-btn {
+            background: #555;
+            color: white;
+        }
+
+        .excel {
+            background: green;
+            color: white;
+        }
+
+        .report {
+            background: #333;
+            color: white;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .present {
+            color: green;
+            font-weight: bold;
+        }
+
+        .absent {
+            color: red;
+            font-weight: bold;
+        }
+
+        .not-marked {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .no-data {
+            text-align: center;
+            color: red;
+            font-weight: bold;
+            padding: 20px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <h1>
+        View Attendance
+
+        {% if selected_date %}
+            - {{ selected_date }}
+        {% endif %}
+    </h1>
+
+
+    <!-- DATE SELECT -->
+
+    <form method="GET" action="/view-attendance">
+
+        <div class="date-box">
+
+            <label>
+                <b>Select Date:</b>
+            </label>
+
+            <input
+                type="date"
+                name="attendance_date"
+                value="{{ selected_date }}"
+                required
+            >
+
+            <button
+                type="submit"
+                class="view-btn"
+            >
+                View Attendance
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- BUTTONS -->
+
+    <div class="buttons">
+
+
+        <a href="/dashboard">
+
+            <button
+                type="button"
+                class="back-btn"
+            >
+                ← Back to Dashboard
+            </button>
+
+        </a>
+
+
+        {% if selected_date %}
+
+
+        <a
+            href="/download-daily-excel?attendance_date={{ selected_date }}"
+        >
+
+            <button
+                type="button"
+                class="excel"
+            >
+                📊 Download Daily Excel
+            </button>
+
+        </a>
+
+
+        <a
+            href="/reports?attendance_date={{ selected_date }}"
+        >
+
+            <button
+                type="button"
+                class="report"
+            >
+                📋 View Report
+            </button>
+
+        </a>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+    <!-- ATTENDANCE TABLE -->
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Roll No</th>
+
+                <th>PRN No</th>
+
+                <th>Name</th>
+
+                <th>Class</th>
+
+                <th>Status</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+        {% if selected_date %}
+
+
+            {% for row in attendance %}
+
+            <tr>
+
+                <td>
+                    {{ row.roll_no }}
+                </td>
+
+                <td>
+                    {{ row.prn_no }}
+                </td>
+
+                <td>
+                    {{ row.name }}
+                </td>
+
+                <td>
+                    {{ row.class_name }}
+                </td>
+
+                <td>
+
+
+                    {% if row.status == "Present" %}
+
+                        <span class="present">
+                            Present
+                        </span>
+
+
+                    {% elif row.status == "Absent" %}
+
+                        <span class="absent">
+                            Absent
+                        </span>
+
+
+                    {% else %}
+
+                        <span class="not-marked">
+                            Not Marked
+                        </span>
+
+                    {% endif %}
+
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <tr>
+
+                <td
+                    colspan="5"
+                    class="no-data"
+                >
+
+                    Please select a date to view attendance.
+
+                </td>
+
+            </tr>
+
+
+        {% endif %}
+
+
+        </tbody>
+
+    </table>
+
+
+</div>
+
+</body>
+
+</html>
