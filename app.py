@@ -35,9 +35,11 @@ app = Flask(__name__)
 def get_db_connection():
     return mysql.connector.connect(
         host=DB_CONFIG["host"],
+        port=DB_CONFIG["port"],
         user=DB_CONFIG["user"],
         password=DB_CONFIG["password"],
-        database=DB_CONFIG["database"]
+        database=DB_CONFIG["database"],
+        ssl_disabled=False
     )
 
 
@@ -256,8 +258,10 @@ def edit_student(student_id):
         class_name = request.form.get("class_name")
 
         if not roll_no or not prn_no or not name or not class_name:
+
             cursor.close()
             conn.close()
+
             return "All fields are required."
 
         cursor.execute(
@@ -284,7 +288,9 @@ def edit_student(student_id):
         cursor.close()
         conn.close()
 
-        return redirect(url_for("students"))
+        return redirect(
+            url_for("students")
+        )
 
     cursor.execute(
         """
@@ -306,6 +312,7 @@ def edit_student(student_id):
     conn.close()
 
     if student is None:
+
         return """
         <h2>Student not found</h2>
         <a href="/students">Back</a>
@@ -444,7 +451,6 @@ def mark_attendance():
 )
 def view_attendance():
 
-    # GET किंवा POST मधून date घ्या
     attendance_date = request.values.get(
         "attendance_date"
     )
@@ -1117,11 +1123,14 @@ def download_report_excel():
             absent_days = row["absent_days"] or 0
 
             if total_days > 0:
+
                 percentage = (
                     present_days /
                     total_days
                 ) * 100
+
             else:
+
                 percentage = 0
 
             sheet.cell(
@@ -1187,11 +1196,14 @@ def download_report_excel():
             absent_days = row["absent_days"] or 0
 
             if total_days > 0:
+
                 percentage = (
                     present_days /
                     total_days
                 ) * 100
+
             else:
+
                 percentage = 0
 
             sheet.cell(
