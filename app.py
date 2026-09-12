@@ -366,15 +366,46 @@ def delete_student(id):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        """
-        DELETE FROM students
-        WHERE id = %s
-        """,
-        (id,)
-    )
+    try:
 
-    conn.commit()
+        # -------------------------------------------------
+        # First delete attendance records
+        # -------------------------------------------------
+
+        cursor.execute(
+            """
+            DELETE FROM attendance
+            WHERE student_id = %s
+            """,
+            (id,)
+        )
+
+        # -------------------------------------------------
+        # Then delete student
+        # -------------------------------------------------
+
+        cursor.execute(
+            """
+            DELETE FROM students
+            WHERE id = %s
+            """,
+            (id,)
+        )
+
+        conn.commit()
+
+    except Exception as e:
+
+        conn.rollback()
+
+        cursor.close()
+        conn.close()
+
+        return f"""
+        <h2>Student Delete Failed</h2>
+        <p>{e}</p>
+        <a href="/students">Back to Students</a>
+        """
 
     cursor.close()
     conn.close()
