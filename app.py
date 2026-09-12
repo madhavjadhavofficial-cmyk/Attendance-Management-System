@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file
 import mysql.connector
+import os
 
 from config import DB_CONFIG
 
@@ -33,13 +34,34 @@ app = Flask(__name__)
 # =========================================================
 
 def get_db_connection():
+
+    connection_config = {
+        "host": DB_CONFIG["host"],
+        "port": DB_CONFIG["port"],
+        "user": DB_CONFIG["user"],
+        "password": DB_CONFIG["password"],
+        "database": DB_CONFIG["database"],
+        "connection_timeout": 10
+    }
+
+    # Aiven MySQL SSL connection
+    if DB_CONFIG["host"] != "localhost":
+
+        ca_path = os.path.join(
+            os.path.dirname(__file__),
+            "ca.pem"
+        )
+
+        if os.path.exists(ca_path):
+
+            connection_config.update({
+                "ssl_ca": ca_path,
+                "ssl_verify_cert": True,
+                "ssl_verify_identity": True
+            })
+
     return mysql.connector.connect(
-        host=DB_CONFIG["host"],
-        port=DB_CONFIG["port"],
-        user=DB_CONFIG["user"],
-        password=DB_CONFIG["password"],
-        database=DB_CONFIG["database"],
-        ssl_disabled=False
+        **connection_config
     )
 
 
@@ -49,6 +71,7 @@ def get_db_connection():
 
 @app.route("/")
 def login_page():
+
     return render_template("login.html")
 
 
@@ -81,7 +104,10 @@ def login():
     conn.close()
 
     if user:
-        return redirect(url_for("dashboard"))
+
+        return redirect(
+            url_for("dashboard")
+        )
 
     return """
     <h2>Invalid Username or Password</h2>
@@ -135,10 +161,13 @@ def dashboard():
 
     # Attendance Percentage
     if total_students > 0:
+
         attendance_percentage = (
             present_today / total_students
         ) * 100
+
     else:
+
         attendance_percentage = 0
 
     cursor.close()
@@ -244,7 +273,10 @@ def add_student():
 # EDIT STUDENT
 # =========================================================
 
-@app.route("/edit-student/<int:student_id>", methods=["GET", "POST"])
+@app.route(
+    "/edit-student/<int:student_id>",
+    methods=["GET", "POST"]
+)
 def edit_student(student_id):
 
     conn = get_db_connection()
@@ -393,7 +425,6 @@ def mark_attendance():
         for student in students:
 
             # Default = Present
-            # If Absent is selected, save Absent
             status = request.form.get(
                 f"status_{student['id']}",
                 "Present"
@@ -509,6 +540,7 @@ def download_daily_excel():
     )
 
     if not attendance_date:
+
         return "Attendance date is required."
 
     conn = get_db_connection()
@@ -1328,6 +1360,7 @@ def download_report_pdf():
     )
 
     if not attendance_date:
+
         return "Attendance date is required."
 
     conn = get_db_connection()
