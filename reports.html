@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Attendance Reports</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .report-box {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .view {
+            background: #007bff;
+            color: white;
+        }
+
+        .excel {
+            background: green;
+            color: white;
+        }
+
+        .pdf {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .back {
+            background: #555;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .present {
+            color: green;
+            font-weight: bold;
+        }
+
+        .absent {
+            color: red;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Attendance Reports</h1>
+
+
+    <!-- ================================================= -->
+    <!-- DATE WISE REPORT -->
+    <!-- ================================================= -->
+
+    <div class="report-box">
+
+        <h2>Date-wise Report</h2>
+
+        <form method="GET" action="/reports">
+
+            <input
+                type="date"
+                name="attendance_date"
+                value="{{ selected_date }}"
+                required
+            >
+
+            <button
+                type="submit"
+                class="view"
+            >
+                View Date Report
+            </button>
+
+        </form>
+
+        {% if selected_date %}
+
+        <a
+            href="/download-report-excel?attendance_date={{ selected_date }}"
+        >
+            <button class="excel">
+                Download Date Excel
+            </button>
+        </a>
+
+        <a
+            href="/download-report-pdf?attendance_date={{ selected_date }}"
+        >
+            <button class="pdf">
+                Download Date PDF
+            </button>
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- MONTH WISE REPORT -->
+    <!-- ================================================= -->
+
+    <div class="report-box">
+
+        <h2>Month-wise Report</h2>
+
+        <form method="GET" action="/reports">
+
+            <input
+                type="month"
+                name="attendance_month"
+                value="{{ selected_month }}"
+                required
+            >
+
+            <button
+                type="submit"
+                class="view"
+            >
+                View Monthly Report
+            </button>
+
+        </form>
+
+        {% if selected_month %}
+
+        <a
+            href="/download-report-excel?attendance_month={{ selected_month }}"
+        >
+            <button class="excel">
+                Download Monthly Excel
+            </button>
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- BACK BUTTON -->
+    <!-- ================================================= -->
+
+    <div style="text-align:center;">
+
+        <a href="/dashboard">
+
+            <button class="back">
+                ← Back to Dashboard
+            </button>
+
+        </a>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- REPORT TABLE -->
+    <!-- ================================================= -->
+
+    {% if reports %}
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                {% if selected_date %}
+
+                    <th>Roll No</th>
+                    <th>PRN No</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Status</th>
+
+                {% else %}
+
+                    <th>Roll No</th>
+                    <th>PRN No</th>
+                    <th>Name</th>
+                    <th>Class</th>
+                    <th>Total Days</th>
+                    <th>Present Days</th>
+                    <th>Absent Days</th>
+                    <th>Attendance %</th>
+
+                {% endif %}
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        {% for row in reports %}
+
+            <tr>
+
+                <td>{{ row.roll_no }}</td>
+
+                <td>{{ row.prn_no }}</td>
+
+                <td>{{ row.name }}</td>
+
+                <td>{{ row.class_name }}</td>
+
+
+                {% if selected_date %}
+
+                    <td>
+
+                        {% if row.status == "Present" %}
+
+                            <span class="present">
+                                Present
+                            </span>
+
+                        {% elif row.status == "Absent" %}
+
+                            <span class="absent">
+                                Absent
+                            </span>
+
+                        {% else %}
+
+                            Not Marked
+
+                        {% endif %}
+
+                    </td>
+
+                {% else %}
+
+                    <td>
+                        {{ row.total_days or 0 }}
+                    </td>
+
+                    <td>
+                        {{ row.present_days or 0 }}
+                    </td>
+
+                    <td>
+                        {{ row.absent_days or 0 }}
+                    </td>
+
+                    <td>
+
+                        {% set total = row.total_days or 0 %}
+                        {% set present = row.present_days or 0 %}
+
+                        {% if total > 0 %}
+
+                            {{ "%.2f"|format((present / total) * 100) }}%
+
+                        {% else %}
+
+                            0%
+
+                        {% endif %}
+
+                    </td>
+
+                {% endif %}
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+        <p style="text-align:center; margin-top:30px;">
+            Please select Date or Month to view report.
+        </p>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

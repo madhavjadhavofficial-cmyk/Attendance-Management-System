@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Student Management</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .top-buttons {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            background: #555;
+            color: white;
+        }
+
+        .add-btn {
+            background: green;
+            color: white;
+            float: right;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+            margin-right: 5px;
+        }
+
+        .delete-btn {
+            background: red;
+            color: white;
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 5px;
+        }
+
+        .edit-btn:hover,
+        .delete-btn:hover,
+        button:hover {
+            opacity: 0.85;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>Student Management</h1>
+
+
+    <div class="top-buttons">
+
+        <a href="/dashboard">
+            <button class="back-btn">
+                ← Back to Dashboard
+            </button>
+        </a>
+
+
+        <a href="/add-student">
+            <button class="add-btn">
+                + Add Student
+            </button>
+        </a>
+
+    </div>
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Roll No</th>
+
+                <th>PRN No</th>
+
+                <th>Name</th>
+
+                <th>Class</th>
+
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for student in students %}
+
+            <tr>
+
+                <td>
+                    {{ student.roll_no }}
+                </td>
+
+                <td>
+                    {{ student.prn_no }}
+                </td>
+
+                <td>
+                    {{ student.name }}
+                </td>
+
+                <td>
+                    {{ student.class_name }}
+                </td>
+
+                <td>
+
+                    <a
+                        href="/edit-student/{{ student.id }}"
+                        class="edit-btn"
+                    >
+                        Edit
+                    </a>
+
+
+                    <a
+                        href="/delete-student/{{ student.id }}"
+                        class="delete-btn"
+                        onclick="return confirm('Are you sure you want to delete this student?');"
+                    >
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+
+</html>
