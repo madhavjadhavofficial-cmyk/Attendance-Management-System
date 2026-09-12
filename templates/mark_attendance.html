@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Mark Attendance</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .date-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #333;
+            color: white;
+        }
+
+        .present {
+            color: green;
+            font-weight: bold;
+        }
+
+        .absent {
+            color: red;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background: green;
+            color: white;
+        }
+
+        .back-btn {
+            background: #555;
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>Mark Attendance</h1>
+
+
+    <form method="POST">
+
+
+        <!-- DATE -->
+
+        <div class="date-box">
+
+            <label>
+                <b>Select Date:</b>
+            </label>
+
+            <input
+                type="date"
+                name="attendance_date"
+                required
+            >
+
+        </div>
+
+
+        <!-- ATTENDANCE TABLE -->
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Roll No</th>
+
+                    <th>PRN No</th>
+
+                    <th>Student Name</th>
+
+                    <th>Class</th>
+
+                    <th>Present</th>
+
+                    <th>Absent</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for student in students %}
+
+
+                <tr>
+
+
+                    <!-- ROLL NO -->
+
+                    <td>
+                        {{ student.roll_no }}
+                    </td>
+
+
+                    <!-- PRN -->
+
+                    <td>
+                        {{ student.prn_no }}
+                    </td>
+
+
+                    <!-- NAME -->
+
+                    <td>
+                        {{ student.name }}
+                    </td>
+
+
+                    <!-- CLASS -->
+
+                    <td>
+                        {{ student.class_name }}
+                    </td>
+
+
+                    <!-- PRESENT -->
+
+                    <td>
+
+                        <input
+                            type="radio"
+                            name="status_{{ student.id }}"
+                            value="Present"
+                            checked
+                        >
+
+                        <span class="present">
+                            Present
+                        </span>
+
+                    </td>
+
+
+                    <!-- ABSENT -->
+
+                    <td>
+
+                        <input
+                            type="radio"
+                            name="status_{{ student.id }}"
+                            value="Absent"
+                        >
+
+                        <span class="absent">
+                            Absent
+                        </span>
+
+                    </td>
+
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+
+        <br>
+
+
+        <!-- SAVE BUTTON -->
+
+        <button
+            type="submit"
+            class="save-btn"
+        >
+            Save Attendance
+        </button>
+
+
+        <!-- BACK BUTTON -->
+
+        <a href="/dashboard">
+
+            <button
+                type="button"
+                class="back-btn"
+            >
+                Back
+            </button>
+
+        </a>
+
+
+    </form>
+
+
+</div>
+
+</body>
+
+</html>
