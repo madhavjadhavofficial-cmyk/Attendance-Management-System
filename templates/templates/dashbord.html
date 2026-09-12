@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f6f9;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: #1e3a8a;
+            color: white;
+            padding: 22px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 26px;
+        }
+
+        .header p {
+            margin-top: 5px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .logout {
+            background: #ef4444;
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .logout:hover {
+            background: #dc2626;
+        }
+
+        /* Main */
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            color: #1f2937;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #6b7280;
+        }
+
+        /* Cards */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: #1f2937;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            border-left: 6px solid #2563eb;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* Different card colors */
+        .student {
+            border-left-color: #2563eb;
+        }
+
+        .attendance {
+            border-left-color: #16a34a;
+        }
+
+        .view {
+            border-left-color: #f59e0b;
+        }
+
+        .reports {
+            border-left-color: #9333ea;
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>📊 Attendance Management System</h1>
+            <p>Student Attendance Dashboard</p>
+        </div>
+
+        <a href="/" class="logout">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+
+        <div class="welcome">
+            <h2>Welcome to Dashboard 👋</h2>
+            <p>Select an option below to manage the attendance system.</p>
+        </div>
+
+        <div class="menu-grid">
+
+            <!-- Student Management -->
+            <a href="/students" class="card student">
+                <div class="icon">👨‍🎓</div>
+                <h3>Student Management</h3>
+                <p>Add, edit and delete student information.</p>
+            </a>
+
+            <!-- Mark Attendance -->
+            <a href="/mark-attendance" class="card attendance">
+                <div class="icon">✅</div>
+                <h3>Mark Attendance</h3>
+                <p>Mark today's student attendance quickly.</p>
+            </a>
+
+            <!-- View Attendance -->
+            <a href="/view-attendance" class="card view">
+                <div class="icon">📋</div>
+                <h3>View Attendance</h3>
+                <p>View attendance records by date.</p>
+            </a>
+
+            <!-- Reports -->
+            <a href="/reports" class="card reports">
+                <div class="icon">📈</div>
+                <h3>Reports</h3>
+                <p>Generate date-wise and month-wise attendance reports.</p>
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
